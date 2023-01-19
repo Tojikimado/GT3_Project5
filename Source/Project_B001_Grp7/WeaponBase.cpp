@@ -26,20 +26,7 @@ void AWeaponBase::Tick(float DeltaTime)
 	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, TEXT("Hello World"));
 }
 
-void AWeaponBase::Shoot()
+int AWeaponBase::Shoot(ATarget* Target)
 {
-	switch (WeaponType)
-	{
-	case EnumWeaponType::AUTO:
-		break;
-	case EnumWeaponType::SEMIAUTO:
-		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, TEXT("PAN"));
-		break;
-	case EnumWeaponType::LASER:
-		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, TEXT("ZZZZZZZZZZZZZZZZZZZZZZZ"));
-		break;
-	case EnumWeaponType::CAC:
-		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, TEXT("SLASH"));
-		break;
-	}
+	return Target->Hit(Damage);
 }

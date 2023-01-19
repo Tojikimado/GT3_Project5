@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "Target.h"
 #include "WeaponBase.generated.h"
 
 UENUM(BlueprintType)
@@ -50,7 +51,7 @@ public:
 		int MaxLoader;
 
 	UPROPERTY(EditAnywhere)
-		int ShootCoolDown;
+		float ShootCoolDown;
 
 	UPROPERTY(EditAnywhere)
 		FName SocketName = "MainHand";
@@ -67,7 +68,7 @@ public:
 	UPROPERTY(EditAnywhere)
 		FVector3d OffSetScale;
 
-	void Shoot();
+	int Shoot(ATarget* Target);
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		EnumWeaponType WeaponType;

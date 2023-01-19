@@ -10,6 +10,7 @@
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
 #include "DrawDebugHelpers.h"
+#include "Target.h"
 
 //////////////////////////////////////////////////////////////////////////
 // AProject_B001_Grp7Character
@@ -77,6 +78,24 @@ void AProject_B001_Grp7Character::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 	WeaponMesh->SetWorldLocation(GetMesh()->GetSocketLocation(MainWeapon->GetDefaultObject<AWeaponBase>()->SocketName));
 	WeaponMesh->SetWorldRotation(GetMesh()->GetSocketRotation(MainWeapon->GetDefaultObject<AWeaponBase>()->SocketName));
+
+	if (Shooting && TimerShootCooldown >= MainWeapon->GetDefaultObject<AWeaponBase>()->ShootCoolDown) {
+		Shoot();
+	}
+
+	if (TimerShootCooldown < MainWeapon->GetDefaultObject<AWeaponBase>()->ShootCoolDown) {
+		TimerShootCooldown += DeltaTime;
+	}
+}
+
+void AProject_B001_Grp7Character::StartShooting()
+{
+	Shooting = true;
+}
+
+void AProject_B001_Grp7Character::EndShooting()
+{
+	Shooting = false;
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -101,7 +120,8 @@ void AProject_B001_Grp7Character::SetupPlayerInputComponent(class UInputComponen
 
 		PlayerInputComponent->BindAxis("Wheel", this, &AProject_B001_Grp7Character::SwitchWeapon);
 
-		PlayerInputComponent->BindKey(EKeys::O, IE_Pressed, this, &AProject_B001_Grp7Character::Shoot);
+		PlayerInputComponent->BindAction("Shoot", IE_Pressed, this, &AProject_B001_Grp7Character::StartShooting);
+		PlayerInputComponent->BindAction("Shoot", IE_Released, this, &AProject_B001_Grp7Character::EndShooting);
 	}
 
 }
@@ -194,9 +214,25 @@ void AProject_B001_Grp7Character::SetWeapon()
 	this->GetMesh()->SetAnimInstanceClass(MainWeapon->GetDefaultObject<AWeaponBase>()->AnimationWeapon->GetAnimBlueprintGeneratedClass());
 }
 
-void AProject_B001_Grp7Character::Shoot() {
-	Raycast();
-	MainWeapon->GetDefaultObject<AWeaponBase>()->Shoot();
+void AProject_B001_Grp7Character::Shoot() 
+{
+	TimerShootCooldown = 0;
+	switch (MainWeapon->GetDefaultObject<AWeaponBase>()->WeaponType)
+	{
+	case EnumWeaponType::AUTO:
+		Raycast();
+		break;
+	case EnumWeaponType::SEMIAUTO:
+		Raycast();
+		Shooting = false;
+		break;
+	case EnumWeaponType::LASER:
+		Raycast();
+		break;
+	case EnumWeaponType::CAC:
+		Raycast();
+		break;
+	}
 }
 
 void AProject_B001_Grp7Character::Raycast()
@@ -204,7 +240,7 @@ void AProject_B001_Grp7Character::Raycast()
 	FHitResult OutHit;
 
 	FCollisionQueryParams CollisionParams;
-	CollisionParams.AddIgnoredActor(this->GetOwner());
+	CollisionParams.AddIgnoredActor(this);
 
 	FVector Start = WeaponMesh->GetComponentLocation();
 	FVector ForwardVector = WeaponMesh->GetForwardVector();
@@ -215,4 +251,16 @@ void AProject_B001_Grp7Character::Raycast()
 
 	//Draw Ray
 	DrawDebugLine(GetWorld(), Start, End, FColor::Green, false, 1, 0, 1);
+
+	bool IsHit = GetWorld()->LineTraceSingleByChannel(OutHit, Start, End, ECC_Visibility, CollisionParams);
+
+	if (IsHit) {
+
+		if (OutHit.GetActor()->IsA(ATarget::StaticClass())) {
+
+			Points += MainWeapon->GetDefaultObject<AWeaponBase>()->Shoot(Cast<ATarget>(OutHit.GetActor()));
+
+			GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString::Printf(TEXT("Points : %lld"), Points));
+		}
+	}
 }

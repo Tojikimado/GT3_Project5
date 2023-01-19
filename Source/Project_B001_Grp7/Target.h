@@ -37,6 +37,10 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		EnumDificulty Dificulty;
 
-	float Life;
+	float Life = 250;
+	float LifeTime;
 	float timer;
+	float points;
+
+	int Hit(int Damage);
 };

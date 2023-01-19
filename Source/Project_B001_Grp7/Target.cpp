@@ -20,16 +20,20 @@ void ATarget::BeginPlay()
 
 	switch (Dificulty) {
 	case EnumDificulty::EASY:
-		Life = 5.0f;
+		LifeTime = 5.0f;
+		points = 25;
 		break;
 	case EnumDificulty::MEDIUM:
-		Life = 2.5f;
+		LifeTime = 2.5f;
+		points = 50;
 		break;
 	case EnumDificulty::HARD:
-		Life = 1.0f;
+		LifeTime = 1.0f;
+		points = 100;
 		break;
 	case EnumDificulty::HELL:
-		Life = 0.5f;
+		LifeTime = 0.5f;
+		points = 150;
 		break;
 	}
 }
@@ -40,8 +44,18 @@ void ATarget::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 
 	timer += DeltaTime;
-	if (timer >= Life) {
+	if (timer >= LifeTime || Life <= 0) {
 		K2_DestroyActor();
 	}
+}
+
+int ATarget::Hit(int Damage)
+{
+	Life -= Damage;
+
+	if (Life <= 0) {
+		return points;
+	}
+	return 0;
 }
 

@@ -74,6 +74,12 @@ public:
 
 	int ActualWeapon = 0;
 
+	int Points = 0;
+
+	bool Shooting = false;
+
+	float TimerShootCooldown;
+
 	UStaticMeshComponent* WeaponMesh;
 
 	UPROPERTY(EditAnywhere)
@@ -84,6 +90,9 @@ public:
 
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
+
+	void StartShooting();
+	void EndShooting();
 
 	void Shoot();
 
