@@ -6,6 +6,7 @@
 #include "GameFramework/Actor.h"
 #include "Components/BoxComponent.h"
 #include "Target.h"
+#include "ZoneHUD.h"
 #include "Project_B001_Grp7Character.h"
 #include "SpawningZone.generated.h"
 
@@ -51,4 +52,10 @@ public:
 
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
+
+	UPROPERTY(EditAnywhere)
+		TSubclassOf<class UZoneHUD> HudClass;
+
+	UPROPERTY()
+		class UZoneHUD* Hud;
 };

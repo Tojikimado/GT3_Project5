@@ -9,7 +9,7 @@
 #include "GameFramework/SpringArmComponent.h"
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
-
+#include "DrawDebugHelpers.h"
 
 //////////////////////////////////////////////////////////////////////////
 // AProject_B001_Grp7Character
@@ -69,16 +69,14 @@ void AProject_B001_Grp7Character::BeginPlay()
 			Subsystem->AddMappingContext(DefaultMappingContext, 0);
 		}
 	}
-	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, TEXT("Hello World"));
 	SetWeapon();
 }
 
 void AProject_B001_Grp7Character::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
-	WeaponMesh->SetWorldLocation(GetMesh()->GetSocketLocation("MainHand"));
-	WeaponMesh->SetWorldRotation(GetMesh()->GetSocketRotation("MainHand"));
+	WeaponMesh->SetWorldLocation(GetMesh()->GetSocketLocation(MainWeapon->GetDefaultObject<AWeaponBase>()->SocketName));
+	WeaponMesh->SetWorldRotation(GetMesh()->GetSocketRotation(MainWeapon->GetDefaultObject<AWeaponBase>()->SocketName));
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -197,5 +195,24 @@ void AProject_B001_Grp7Character::SetWeapon()
 }
 
 void AProject_B001_Grp7Character::Shoot() {
+	Raycast();
 	MainWeapon->GetDefaultObject<AWeaponBase>()->Shoot();
+}
+
+void AProject_B001_Grp7Character::Raycast()
+{
+	FHitResult OutHit;
+
+	FCollisionQueryParams CollisionParams;
+	CollisionParams.AddIgnoredActor(this->GetOwner());
+
+	FVector Start = WeaponMesh->GetComponentLocation();
+	FVector ForwardVector = WeaponMesh->GetForwardVector();
+
+	Start = Start + (ForwardVector);
+
+	FVector End = Start + (ForwardVector * 5000.0f);
+
+	//Draw Ray
+	DrawDebugLine(GetWorld(), Start, End, FColor::Green, false, 1, 0, 1);
 }

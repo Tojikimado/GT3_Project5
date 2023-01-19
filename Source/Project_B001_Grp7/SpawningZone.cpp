@@ -2,7 +2,6 @@
 
 
 #include "SpawningZone.h"
-
 // Sets default values
 ASpawningZone::ASpawningZone()
 {
@@ -17,6 +16,9 @@ ASpawningZone::ASpawningZone()
 	CollisionBox->OnComponentBeginOverlap.AddDynamic(this, &ASpawningZone::OverlapBegin);
 	CollisionBox->OnComponentEndOverlap.AddDynamic(this, &ASpawningZone::OverlapEnd);
 
+	HudClass = nullptr;
+	Hud = nullptr;
+
 	this->SetActorTickEnabled(true);
 }
 
@@ -29,8 +31,18 @@ void ASpawningZone::BeginPlay()
 
 void ASpawningZone::OverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	if (OtherActor->IsA(AProject_B001_Grp7Character::StaticClass())) {
+	if (OtherActor->IsA(AProject_B001_Grp7Character::StaticClass()) && started != true) {
 		started = true;
+		timerTimer = Timer;
+
+		if (Cast<AProject_B001_Grp7Character>(OtherActor)->IsLocallyControlled() && HudClass) {
+			APlayerController* PC = Cast<AProject_B001_Grp7Character>(OtherActor)->GetController<APlayerController>();
+			check(PC);
+			Hud = CreateWidget<UZoneHUD>(PC, HudClass);
+			check(Hud);
+			Hud->Init();
+			Hud->AddToPlayerScreen();
+		}
 	}
 }
 
@@ -45,25 +57,28 @@ void ASpawningZone::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 
 	if (started) {
+
 		timerSpawn += DeltaTime;
 
 		if (timerSpawn > SpawnCooldown && SpawnCooldown > 0.0f) {
 			timerSpawn = 0.0f;
 			CollisionBox->GetLocalBounds().BoxExtent;
 
-			GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, TEXT("Spawned"));
-
 			float X = FMath::RandRange(-((float)(CollisionBox->GetLocalBounds().BoxExtent.X) / 2), (float)(CollisionBox->GetLocalBounds().BoxExtent.X) / 2) + GetActorLocation().X;
 			float Y = FMath::RandRange(-((float)(CollisionBox->GetLocalBounds().BoxExtent.Y) / 2), (float)(CollisionBox->GetLocalBounds().BoxExtent.Y) / 2) + GetActorLocation().Y;
 
 			GetWorld()->SpawnActor<ATarget>(TargetToSpawn, FVector(X, Y, CollisionBox->GetLocalBounds().BoxExtent.Z), FRotator(0, 0, 0), SpawnInfo);
-
-			timerTimer += DeltaTime;
-
-			if (timerTimer >= Timer) {
-				started = false;
-			}
 		}
+
+		timerTimer -= DeltaTime;
+
+		Hud->SetTimer(timerTimer, Timer);
+
+		if (timerTimer <= 0.0f) {
+			started = false;
+			Hud->RemoveFromParent();
+		}
+		
 	}
 	
 
