@@ -229,9 +229,6 @@ void AProject_B001_Grp7Character::Shoot()
 	case EnumWeaponType::LASER:
 		Raycast();
 		break;
-	case EnumWeaponType::CAC:
-		Raycast();
-		break;
 	}
 }
 

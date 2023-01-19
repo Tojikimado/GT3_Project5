@@ -92,6 +92,7 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 	void StartShooting();
+
 	void EndShooting();
 
 	void Shoot();

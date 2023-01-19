@@ -12,7 +12,6 @@ enum class EnumWeaponType : uint8 {
 	AUTO       UMETA(DisplayName = "AUTO"),
 	SEMIAUTO       UMETA(DisplayName = "SEMIAUTO"),
 	LASER       UMETA(DisplayName = "LASER"),
-	CAC        UMETA(DisplayName = "CAC"),
 };
 
 UCLASS()
