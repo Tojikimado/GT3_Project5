@@ -53,6 +53,9 @@ public:
 		int ShootCoolDown;
 
 	UPROPERTY(EditAnywhere)
+		FName SocketName = "MainHand";
+
+	UPROPERTY(EditAnywhere)
 		UAnimBlueprint* AnimationWeapon;
 
 	UPROPERTY(EditAnywhere)
@@ -69,5 +72,5 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		EnumWeaponType WeaponType;
 
-	
+
 };

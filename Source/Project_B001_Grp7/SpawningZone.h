@@ -6,6 +6,7 @@
 #include "GameFramework/Actor.h"
 #include "Components/BoxComponent.h"
 #include "Target.h"
+#include "ZoneHUD.h"
 #include "Project_B001_Grp7Character.h"
 #include "SpawningZone.generated.h"
 
@@ -13,8 +14,8 @@ UCLASS()
 class PROJECT_B001_GRP7_API ASpawningZone : public AActor
 {
 	GENERATED_BODY()
-	
-public:	
+
+public:
 	// Sets default values for this actor's properties
 	ASpawningZone();
 
@@ -51,4 +52,10 @@ public:
 
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
+
+	UPROPERTY(EditAnywhere)
+		TSubclassOf<class UZoneHUD> HudClass;
+
+	UPROPERTY()
+		class UZoneHUD* Hud;
 };

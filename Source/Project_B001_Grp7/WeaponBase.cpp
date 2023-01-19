@@ -2,6 +2,7 @@
 
 
 #include "WeaponBase.h"
+#include "DrawDebugHelpers.h"
 
 // Sets default values
 AWeaponBase::AWeaponBase()
@@ -27,11 +28,9 @@ void AWeaponBase::Tick(float DeltaTime)
 
 void AWeaponBase::Shoot()
 {
-
 	switch (WeaponType)
 	{
 	case EnumWeaponType::AUTO:
-		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, TEXT("PAN PAN PAN PAN"));
 		break;
 	case EnumWeaponType::SEMIAUTO:
 		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, TEXT("PAN"));
@@ -44,4 +43,3 @@ void AWeaponBase::Shoot()
 		break;
 	}
 }
-

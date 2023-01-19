@@ -7,16 +7,28 @@
 #include "ZoneHUD.generated.h"
 
 /**
- * 
+ *
  */
 UCLASS()
 class PROJECT_B001_GRP7_API UZoneHUD : public UUserWidget
 {
 	GENERATED_BODY()
-	
-public :
+
+public:
+
+	void Init();
+
 	void SetTimer(float TimeRemainings, float TimeMax);
 
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, meta = (BindWidget))
 		class UTextBlock* TimerText;
+
+	UPROPERTY(EditAnywhere, meta = (BindWidget))
+		class UImage* TimerImage;
+
+	UPROPERTY(EditAnywhere)
+		class UMaterialInstance* TimerMI;
+
+	UPROPERTY()
+		UMaterialInstanceDynamic* TimerMID;
 };
