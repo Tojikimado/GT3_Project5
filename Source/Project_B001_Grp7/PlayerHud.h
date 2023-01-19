@@ -1,0 +1,31 @@
+// Fill out your copyright notice in the Description page of Project Settings.
+
+#pragma once
+
+#include "CoreMinimal.h"
+#include "Blueprint/UserWidget.h"
+#include "PlayerHud.generated.h"
+
+/**
+ * 
+ */
+UCLASS()
+class PROJECT_B001_GRP7_API UPlayerHud : public UUserWidget
+{
+	GENERATED_BODY()
+	
+public:
+
+	void SetAmmo(int CurrentAmmo, int AllAmmo);
+
+	void SetPoints(int Points);
+
+	UPROPERTY(EditAnywhere, meta = (BindWidget))
+		class UTextBlock* PointsText;
+
+	UPROPERTY(EditAnywhere, meta = (BindWidget))
+		class UTextBlock* CurrentAmmoText;
+
+	UPROPERTY(EditAnywhere, meta = (BindWidget))
+		class UTextBlock* AllAmmoText;
+};

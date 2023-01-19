@@ -70,6 +70,16 @@ void AProject_B001_Grp7Character::BeginPlay()
 			Subsystem->AddMappingContext(DefaultMappingContext, 0);
 		}
 	}
+
+	if (HudClass) {
+		APlayerController* PC = GetController<APlayerController>();
+		check(PC);
+		Hud = CreateWidget<UPlayerHud>(PC, HudClass);
+		check(Hud);
+		Hud->SetPoints(Points);
+		Hud->AddToPlayerScreen();
+	}
+
 	SetWeapon();
 }
 
@@ -79,8 +89,12 @@ void AProject_B001_Grp7Character::Tick(float DeltaTime)
 	WeaponMesh->SetWorldLocation(GetMesh()->GetSocketLocation(MainWeapon->GetDefaultObject<AWeaponBase>()->SocketName));
 	WeaponMesh->SetWorldRotation(GetMesh()->GetSocketRotation(MainWeapon->GetDefaultObject<AWeaponBase>()->SocketName));
 
-	if (Shooting && TimerShootCooldown >= MainWeapon->GetDefaultObject<AWeaponBase>()->ShootCoolDown) {
+	if (Shooting && TimerShootCooldown >= MainWeapon->GetDefaultObject<AWeaponBase>()->ShootCoolDown && MainWeapon->GetDefaultObject<AWeaponBase>()->CurrentAmmo > 0) {
 		Shoot();
+	}
+
+	if (Shooting && MainWeapon->GetDefaultObject<AWeaponBase>()->CurrentAmmo <= 0) {
+		StartReloading();
 	}
 
 	if (TimerShootCooldown < MainWeapon->GetDefaultObject<AWeaponBase>()->ShootCoolDown) {
@@ -117,6 +131,8 @@ void AProject_B001_Grp7Character::SetupPlayerInputComponent(class UInputComponen
 		EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &AProject_B001_Grp7Character::Look);
 
 		PlayerInputComponent->BindKey(EKeys::P, IE_Pressed, this, &AProject_B001_Grp7Character::ShowWeaponStat);
+
+		PlayerInputComponent->BindKey(EKeys::R, IE_Pressed, this, &AProject_B001_Grp7Character::StartReloading);
 
 		PlayerInputComponent->BindAxis("Wheel", this, &AProject_B001_Grp7Character::SwitchWeapon);
 
@@ -208,6 +224,7 @@ void AProject_B001_Grp7Character::SwitchWeapon(float Scroll)
 void AProject_B001_Grp7Character::SetWeapon()
 {
 	MainWeapon = MainWeaponArray[ActualWeapon];
+	Hud->SetAmmo(MainWeapon->GetDefaultObject<AWeaponBase>()->CurrentAmmo, MainWeapon->GetDefaultObject<AWeaponBase>()->AllAmmo);
 	WeaponMesh->SetStaticMesh(MainWeapon->GetDefaultObject<AWeaponBase>()->WeaponMesh);
 	WeaponMesh->SetWorldScale3D(MainWeapon->GetDefaultObject<AWeaponBase>()->OffSetScale);
 
@@ -217,6 +234,8 @@ void AProject_B001_Grp7Character::SetWeapon()
 void AProject_B001_Grp7Character::Shoot() 
 {
 	TimerShootCooldown = 0;
+	MainWeapon->GetDefaultObject<AWeaponBase>()->CurrentAmmo -= 1;
+	Hud->SetAmmo(MainWeapon->GetDefaultObject<AWeaponBase>()->CurrentAmmo, MainWeapon->GetDefaultObject<AWeaponBase>()->AllAmmo);
 	switch (MainWeapon->GetDefaultObject<AWeaponBase>()->WeaponType)
 	{
 	case EnumWeaponType::AUTO:
@@ -247,7 +266,7 @@ void AProject_B001_Grp7Character::Raycast()
 	FVector End = Start + (ForwardVector * 5000.0f);
 
 	//Draw Ray
-	DrawDebugLine(GetWorld(), Start, End, FColor::Green, false, 1, 0, 1);
+	DrawDebugLine(GetWorld(), Start, End, FColor::Yellow, false, 0.05, 0, 1);
 
 	bool IsHit = GetWorld()->LineTraceSingleByChannel(OutHit, Start, End, ECC_Visibility, CollisionParams);
 
@@ -257,7 +276,29 @@ void AProject_B001_Grp7Character::Raycast()
 
 			Points += MainWeapon->GetDefaultObject<AWeaponBase>()->Shoot(Cast<ATarget>(OutHit.GetActor()));
 
-			GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString::Printf(TEXT("Points : %lld"), Points));
+			Hud->SetPoints(Points);
 		}
 	}
+}
+
+void AProject_B001_Grp7Character::StartReloading()
+{
+	if(MainWeapon->GetDefaultObject<AWeaponBase>()->AmmoPerLoader == MainWeapon->GetDefaultObject<AWeaponBase>()->CurrentAmmo || MainWeapon->GetDefaultObject<AWeaponBase>()->AllAmmo == 0) return;
+	Reloading = true;
+}
+
+void AProject_B001_Grp7Character::FinishReloading()
+{
+	if (MainWeapon->GetDefaultObject<AWeaponBase>()->AllAmmo >= (MainWeapon->GetDefaultObject<AWeaponBase>()->AmmoPerLoader - MainWeapon->GetDefaultObject<AWeaponBase>()->CurrentAmmo)) {
+		MainWeapon->GetDefaultObject<AWeaponBase>()->AllAmmo = MainWeapon->GetDefaultObject<AWeaponBase>()->AllAmmo - (MainWeapon->GetDefaultObject<AWeaponBase>()->AmmoPerLoader - MainWeapon->GetDefaultObject<AWeaponBase>()->CurrentAmmo);
+		MainWeapon->GetDefaultObject<AWeaponBase>()->CurrentAmmo = MainWeapon->GetDefaultObject<AWeaponBase>()->AmmoPerLoader;
+	}
+	else {
+		MainWeapon->GetDefaultObject<AWeaponBase>()->CurrentAmmo = MainWeapon->GetDefaultObject<AWeaponBase>()->AllAmmo;
+		MainWeapon->GetDefaultObject<AWeaponBase>()->AllAmmo = 0;
+	}
+
+	Hud->SetAmmo(MainWeapon->GetDefaultObject<AWeaponBase>()->CurrentAmmo, MainWeapon->GetDefaultObject<AWeaponBase>()->AllAmmo);
+
+	Reloading = false;;
 }

@@ -6,6 +6,7 @@
 #include "GameFramework/Character.h"
 #include "InputActionValue.h"
 #include "WeaponBase.h"
+#include "PlayerHUD.h"
 #include "Project_B001_Grp7Character.generated.h"
 
 
@@ -14,8 +15,8 @@ class AProject_B001_Grp7Character : public ACharacter
 {
 	GENERATED_BODY()
 
-		/** Camera boom positioning the camera behind the character */
-		UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
+	/** Camera boom positioning the camera behind the character */
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 		class USpringArmComponent* CameraBoom;
 
 	/** Follow camera */
@@ -88,6 +89,16 @@ public:
 	UPROPERTY(EditAnywhere)
 		TArray<TSubclassOf<AWeaponBase>> MainWeaponArray;
 
+
+	UPROPERTY(EditAnywhere)
+		TSubclassOf<class UPlayerHud> HudClass;
+
+	UPROPERTY()
+		class UPlayerHud* Hud;
+
+	UPROPERTY(BlueprintReadWrite)
+		bool Reloading;
+
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
@@ -98,5 +109,10 @@ public:
 	void Shoot();
 
 	void Raycast();
+
+	void StartReloading();
+
+	UFUNCTION(BlueprintCallable)
+		void FinishReloading();
 };
 
