@@ -18,10 +18,13 @@ public:
 
 	void SetAmmo(int CurrentAmmo, int AllAmmo);
 
-	void SetPoints(int Points);
+	void SetPointsAndMoney(int Points, int Money);
 
 	UPROPERTY(EditAnywhere, meta = (BindWidget))
 		class UTextBlock* PointsText;
+
+	UPROPERTY(EditAnywhere, meta = (BindWidget))
+		class UTextBlock* MoneyText;
 
 	UPROPERTY(EditAnywhere, meta = (BindWidget))
 		class UTextBlock* CurrentAmmoText;

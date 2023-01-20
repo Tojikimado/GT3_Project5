@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "Target.h"
+#include "Components/ArrowComponent.h"
 #include "WeaponBase.generated.h"
 
 UENUM(BlueprintType)

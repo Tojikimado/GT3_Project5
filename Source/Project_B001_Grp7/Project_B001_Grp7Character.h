@@ -77,6 +77,8 @@ public:
 
 	int Points = 0;
 
+	int Money = 0;
+
 	bool Shooting = false;
 
 	float TimerShootCooldown;

@@ -10,7 +10,8 @@ void UPlayerHud::SetAmmo(int CurrentAmmo, int AllAmmo)
 	AllAmmoText->SetText(FText::AsNumber(AllAmmo));
 }
 
-void UPlayerHud::SetPoints(int Points)
+void UPlayerHud::SetPointsAndMoney(int Points, int Money)
 {
 	PointsText->SetText(FText::AsNumber(Points));
+	MoneyText->SetText(FText::AsNumber(Money));
 }

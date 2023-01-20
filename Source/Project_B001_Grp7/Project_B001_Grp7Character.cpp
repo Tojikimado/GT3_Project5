@@ -76,7 +76,7 @@ void AProject_B001_Grp7Character::BeginPlay()
 		check(PC);
 		Hud = CreateWidget<UPlayerHud>(PC, HudClass);
 		check(Hud);
-		Hud->SetPoints(Points);
+		Hud->SetPointsAndMoney(Points, Money);
 		Hud->AddToPlayerScreen();
 	}
 
@@ -258,12 +258,16 @@ void AProject_B001_Grp7Character::Raycast()
 	FCollisionQueryParams CollisionParams;
 	CollisionParams.AddIgnoredActor(this);
 
-	FVector Start = WeaponMesh->GetComponentLocation();
-	FVector ForwardVector = WeaponMesh->GetForwardVector();
+	FVector CamStart = FollowCamera->GetComponentLocation();
+	FVector CamForwardVector = FollowCamera->GetForwardVector();
 
-	Start = Start + (ForwardVector);
+	FVector CamEnd = CamStart + (CamForwardVector * 50000.0f);
 
-	FVector End = Start + (ForwardVector * 5000.0f);
+	bool CamIsHit = GetWorld()->LineTraceSingleByChannel(OutHit, CamStart, CamEnd, ECC_Visibility, CollisionParams);
+
+	FVector Start = WeaponMesh->GetSocketLocation("BulletStart");
+
+	FVector End = CamIsHit ? OutHit.ImpactPoint : CamEnd;
 
 	//Draw Ray
 	DrawDebugLine(GetWorld(), Start, End, FColor::Yellow, false, 0.05, 0, 1);
@@ -274,9 +278,10 @@ void AProject_B001_Grp7Character::Raycast()
 
 		if (OutHit.GetActor()->IsA(ATarget::StaticClass())) {
 
-			Points += MainWeapon->GetDefaultObject<AWeaponBase>()->Shoot(Cast<ATarget>(OutHit.GetActor()));
-
-			Hud->SetPoints(Points);
+			auto earningPoints = MainWeapon->GetDefaultObject<AWeaponBase>()->Shoot(Cast<ATarget>(OutHit.GetActor()));
+			Points += earningPoints;
+			Money += (earningPoints / 2);
+			Hud->SetPointsAndMoney(Points, Money);
 		}
 	}
 }
