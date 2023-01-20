@@ -25,7 +25,7 @@ void AWeaponBase::Tick(float DeltaTime)
 	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, TEXT("Hello World"));
 }
 
-int AWeaponBase::Shoot(ATarget* Target)
+int AWeaponBase::Shoot(ATarget* Target, int Multiplicator)
 {
-	return Target->Hit(Damage);
+	return Target->Hit(Damage * Multiplicator);
 }

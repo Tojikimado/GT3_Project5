@@ -79,6 +79,8 @@ public:
 
 	int Money = 0;
 
+	int LaserMultiplicator = 1;
+
 	bool Shooting = false;
 
 	float TimerShootCooldown;
@@ -101,6 +103,9 @@ public:
 	UPROPERTY(BlueprintReadWrite)
 		bool Reloading;
 
+	UPROPERTY(EditAnywhere)
+		UParticleSystemComponent* Laser;
+
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
@@ -110,7 +115,7 @@ public:
 
 	void Shoot();
 
-	void Raycast();
+	ATarget* Raycast();
 
 	void StartReloading();
 

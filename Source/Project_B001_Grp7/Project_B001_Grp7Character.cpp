@@ -10,6 +10,7 @@
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
 #include "DrawDebugHelpers.h"
+#include "Particles/ParticleSystemComponent.h"
 #include "Target.h"
 
 //////////////////////////////////////////////////////////////////////////
@@ -54,6 +55,8 @@ AProject_B001_Grp7Character::AProject_B001_Grp7Character()
 	WeaponMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("WeaponMesh"));
 	WeaponMesh->AttachToComponent(GetMesh(), FAttachmentTransformRules::KeepRelativeTransform);
 
+	Laser = CreateDefaultSubobject<UParticleSystemComponent>(TEXT("Laser"));
+
 	this->SetActorTickEnabled(true);
 }
 
@@ -89,7 +92,8 @@ void AProject_B001_Grp7Character::Tick(float DeltaTime)
 	WeaponMesh->SetWorldLocation(GetMesh()->GetSocketLocation(MainWeapon->GetDefaultObject<AWeaponBase>()->SocketName));
 	WeaponMesh->SetWorldRotation(GetMesh()->GetSocketRotation(MainWeapon->GetDefaultObject<AWeaponBase>()->SocketName));
 
-	if (Shooting && TimerShootCooldown >= MainWeapon->GetDefaultObject<AWeaponBase>()->ShootCoolDown && MainWeapon->GetDefaultObject<AWeaponBase>()->CurrentAmmo > 0) {
+	Laser->SetHiddenInGame(true);
+	if (Shooting && MainWeapon->GetDefaultObject<AWeaponBase>()->CurrentAmmo > 0) {
 		Shoot();
 	}
 
@@ -110,6 +114,7 @@ void AProject_B001_Grp7Character::StartShooting()
 void AProject_B001_Grp7Character::EndShooting()
 {
 	Shooting = false;
+	LaserMultiplicator = 1;
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -224,34 +229,57 @@ void AProject_B001_Grp7Character::SwitchWeapon(float Scroll)
 void AProject_B001_Grp7Character::SetWeapon()
 {
 	MainWeapon = MainWeaponArray[ActualWeapon];
+	LaserMultiplicator = 1;
 	Hud->SetAmmo(MainWeapon->GetDefaultObject<AWeaponBase>()->CurrentAmmo, MainWeapon->GetDefaultObject<AWeaponBase>()->AllAmmo);
 	WeaponMesh->SetStaticMesh(MainWeapon->GetDefaultObject<AWeaponBase>()->WeaponMesh);
 	WeaponMesh->SetWorldScale3D(MainWeapon->GetDefaultObject<AWeaponBase>()->OffSetScale);
-
 	this->GetMesh()->SetAnimInstanceClass(MainWeapon->GetDefaultObject<AWeaponBase>()->AnimationWeapon->GetAnimBlueprintGeneratedClass());
 }
 
 void AProject_B001_Grp7Character::Shoot() 
 {
-	TimerShootCooldown = 0;
-	MainWeapon->GetDefaultObject<AWeaponBase>()->CurrentAmmo -= 1;
-	Hud->SetAmmo(MainWeapon->GetDefaultObject<AWeaponBase>()->CurrentAmmo, MainWeapon->GetDefaultObject<AWeaponBase>()->AllAmmo);
+	ATarget* target = nullptr;
 	switch (MainWeapon->GetDefaultObject<AWeaponBase>()->WeaponType)
 	{
 	case EnumWeaponType::AUTO:
-		Raycast();
+		if (TimerShootCooldown >= MainWeapon->GetDefaultObject<AWeaponBase>()->ShootCoolDown) {
+			MainWeapon->GetDefaultObject<AWeaponBase>()->CurrentAmmo -= 1;
+			target = Raycast();
+		}
 		break;
 	case EnumWeaponType::SEMIAUTO:
-		Raycast();
-		Shooting = false;
+		if (TimerShootCooldown >= MainWeapon->GetDefaultObject<AWeaponBase>()->ShootCoolDown) 
+		{
+			MainWeapon->GetDefaultObject<AWeaponBase>()->CurrentAmmo -= 1;
+			target = Raycast();
+			Shooting = false;
+		}
 		break;
 	case EnumWeaponType::LASER:
-		Raycast();
+		target = Raycast();
+		Laser->SetHiddenInGame(false);
+		if (TimerShootCooldown >= MainWeapon->GetDefaultObject<AWeaponBase>()->ShootCoolDown)
+		{
+			MainWeapon->GetDefaultObject<AWeaponBase>()->CurrentAmmo -= 5;
+			LaserMultiplicator += 1;
+		}
 		break;
+	}
+
+	if (TimerShootCooldown >= MainWeapon->GetDefaultObject<AWeaponBase>()->ShootCoolDown) {
+		TimerShootCooldown = 0;
+		Hud->SetAmmo(MainWeapon->GetDefaultObject<AWeaponBase>()->CurrentAmmo, MainWeapon->GetDefaultObject<AWeaponBase>()->AllAmmo);
+
+		if (target) {
+			auto earningPoints = MainWeapon->GetDefaultObject<AWeaponBase>()->Shoot(target, LaserMultiplicator);
+			Points += earningPoints;
+			Money += (earningPoints / 2);
+			Hud->SetPointsAndMoney(Points, Money);
+		}
 	}
 }
 
-void AProject_B001_Grp7Character::Raycast()
+ATarget* AProject_B001_Grp7Character::Raycast()
 {
 	FHitResult OutHit;
 
@@ -270,25 +298,33 @@ void AProject_B001_Grp7Character::Raycast()
 	FVector End = CamIsHit ? OutHit.ImpactPoint : CamEnd;
 
 	//Draw Ray
-	DrawDebugLine(GetWorld(), Start, End, FColor::Yellow, false, 0.05, 0, 1);
+	if (MainWeapon->GetDefaultObject<AWeaponBase>()->WeaponType == EnumWeaponType::LASER)
+	{
+		Laser->SetBeamSourcePoint(0, Start, 0);
+		Laser->SetBeamTargetPoint(0, End, 0);
+	}
+	else {
+		DrawDebugLine(GetWorld(), Start, End, FColor::Yellow, false, 0.05, 0, 1);
+	}
+
 
 	bool IsHit = GetWorld()->LineTraceSingleByChannel(OutHit, Start, End, ECC_Visibility, CollisionParams);
 
 	if (IsHit) {
 
 		if (OutHit.GetActor()->IsA(ATarget::StaticClass())) {
-
-			auto earningPoints = MainWeapon->GetDefaultObject<AWeaponBase>()->Shoot(Cast<ATarget>(OutHit.GetActor()));
-			Points += earningPoints;
-			Money += (earningPoints / 2);
-			Hud->SetPointsAndMoney(Points, Money);
+			return Cast<ATarget>(OutHit.GetActor());
 		}
 	}
+
+	return nullptr;
 }
 
 void AProject_B001_Grp7Character::StartReloading()
 {
 	if(MainWeapon->GetDefaultObject<AWeaponBase>()->AmmoPerLoader == MainWeapon->GetDefaultObject<AWeaponBase>()->CurrentAmmo || MainWeapon->GetDefaultObject<AWeaponBase>()->AllAmmo == 0) return;
+
+	LaserMultiplicator = 1;
 	Reloading = true;
 }
 
@@ -305,5 +341,6 @@ void AProject_B001_Grp7Character::FinishReloading()
 
 	Hud->SetAmmo(MainWeapon->GetDefaultObject<AWeaponBase>()->CurrentAmmo, MainWeapon->GetDefaultObject<AWeaponBase>()->AllAmmo);
 
+	
 	Reloading = false;;
 }

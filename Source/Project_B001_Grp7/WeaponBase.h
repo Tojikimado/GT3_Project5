@@ -68,10 +68,11 @@ public:
 	UPROPERTY(EditAnywhere)
 		FVector3d OffSetScale;
 
-	int Shoot(ATarget* Target);
+	int Shoot(ATarget* Target, int Multiplicator);
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		EnumWeaponType WeaponType;
 
-
+	UPROPERTY(EditAnywhere)
+		UParticleSystem* Laser;
 };
