@@ -94,7 +94,7 @@ void AProject_B001_Grp7Character::Tick(float DeltaTime)
 
 	Laser->SetHiddenInGame(true);
 	if (Shooting && MainWeapon->GetDefaultObject<AWeaponBase>()->CurrentAmmo > 0) {
-		Shoot();
+		MainWeapon->GetDefaultObject<AWeaponBase>()->Shoot(this);
 	}
 
 	if (Shooting && MainWeapon->GetDefaultObject<AWeaponBase>()->CurrentAmmo <= 0) {
@@ -236,90 +236,6 @@ void AProject_B001_Grp7Character::SetWeapon()
 	this->GetMesh()->SetAnimInstanceClass(MainWeapon->GetDefaultObject<AWeaponBase>()->AnimationWeapon->GetAnimBlueprintGeneratedClass());
 }
 
-void AProject_B001_Grp7Character::Shoot() 
-{
-	ATarget* target = nullptr;
-	switch (MainWeapon->GetDefaultObject<AWeaponBase>()->WeaponType)
-	{
-	case EnumWeaponType::AUTO:
-		if (TimerShootCooldown >= MainWeapon->GetDefaultObject<AWeaponBase>()->ShootCoolDown) {
-			MainWeapon->GetDefaultObject<AWeaponBase>()->CurrentAmmo -= 1;
-			target = Raycast();
-		}
-		break;
-	case EnumWeaponType::SEMIAUTO:
-		if (TimerShootCooldown >= MainWeapon->GetDefaultObject<AWeaponBase>()->ShootCoolDown) 
-		{
-			MainWeapon->GetDefaultObject<AWeaponBase>()->CurrentAmmo -= 1;
-			target = Raycast();
-			Shooting = false;
-		}
-		break;
-	case EnumWeaponType::LASER:
-		target = Raycast();
-		Laser->SetHiddenInGame(false);
-		if (TimerShootCooldown >= MainWeapon->GetDefaultObject<AWeaponBase>()->ShootCoolDown)
-		{
-			MainWeapon->GetDefaultObject<AWeaponBase>()->CurrentAmmo -= 5;
-			LaserMultiplicator += 1;
-		}
-		break;
-	}
-
-	if (TimerShootCooldown >= MainWeapon->GetDefaultObject<AWeaponBase>()->ShootCoolDown) {
-		TimerShootCooldown = 0;
-		Hud->SetAmmo(MainWeapon->GetDefaultObject<AWeaponBase>()->CurrentAmmo, MainWeapon->GetDefaultObject<AWeaponBase>()->AllAmmo);
-
-		if (target) {
-			auto earningPoints = MainWeapon->GetDefaultObject<AWeaponBase>()->Shoot(target, LaserMultiplicator);
-			Points += earningPoints;
-			Money += (earningPoints / 2);
-			Hud->SetPointsAndMoney(Points, Money);
-		}
-	}
-}
-
-ATarget* AProject_B001_Grp7Character::Raycast()
-{
-	FHitResult OutHit;
-
-	FCollisionQueryParams CollisionParams;
-	CollisionParams.AddIgnoredActor(this);
-
-	FVector CamStart = FollowCamera->GetComponentLocation();
-	FVector CamForwardVector = FollowCamera->GetForwardVector();
-
-	FVector CamEnd = CamStart + (CamForwardVector * 50000.0f);
-
-	bool CamIsHit = GetWorld()->LineTraceSingleByChannel(OutHit, CamStart, CamEnd, ECC_Visibility, CollisionParams);
-
-	FVector Start = WeaponMesh->GetSocketLocation("BulletStart");
-
-	FVector End = CamIsHit ? OutHit.ImpactPoint : CamEnd;
-
-	//Draw Ray
-	if (MainWeapon->GetDefaultObject<AWeaponBase>()->WeaponType == EnumWeaponType::LASER)
-	{
-		Laser->SetBeamSourcePoint(0, Start, 0);
-		Laser->SetBeamTargetPoint(0, End, 0);
-	}
-	else {
-		DrawDebugLine(GetWorld(), Start, End, FColor::Yellow, false, 0.05, 0, 1);
-	}
-
-
-	bool IsHit = GetWorld()->LineTraceSingleByChannel(OutHit, Start, End, ECC_Visibility, CollisionParams);
-
-	if (IsHit) {
-
-		if (OutHit.GetActor()->IsA(ATarget::StaticClass())) {
-			return Cast<ATarget>(OutHit.GetActor());
-		}
-	}
-
-	return nullptr;
-}
-
 void AProject_B001_Grp7Character::StartReloading()
 {
 	if(MainWeapon->GetDefaultObject<AWeaponBase>()->AmmoPerLoader == MainWeapon->GetDefaultObject<AWeaponBase>()->CurrentAmmo || MainWeapon->GetDefaultObject<AWeaponBase>()->AllAmmo == 0) return;
@@ -343,4 +259,9 @@ void AProject_B001_Grp7Character::FinishReloading()
 
 	
 	Reloading = false;;
+}
+
+UCameraComponent* AProject_B001_Grp7Character::GetCamera()
+{
+	return FollowCamera;
 }

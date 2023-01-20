@@ -113,13 +113,11 @@ public:
 
 	void EndShooting();
 
-	void Shoot();
-
-	ATarget* Raycast();
-
 	void StartReloading();
 
 	UFUNCTION(BlueprintCallable)
 		void FinishReloading();
+
+	UCameraComponent* GetCamera();
 };
 
