@@ -238,7 +238,7 @@ void AProject_B001_Grp7Character::StartReloading()
 {
 	if(MainWeapon->GetDefaultObject<AWeaponBase>()->AmmoPerLoader == MainWeapon->GetDefaultObject<AWeaponBase>()->CurrentAmmo || MainWeapon->GetDefaultObject<AWeaponBase>()->AllAmmo == 0) return;
 
-	Reloading = true;
+	MainWeapon->GetDefaultObject<AWeaponBase>()->AnimInstance->Montage_Play(MainWeapon->GetDefaultObject<AWeaponBase>()->Reloading);
 }
 
 void AProject_B001_Grp7Character::FinishReloading()
