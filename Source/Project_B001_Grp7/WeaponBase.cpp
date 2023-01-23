@@ -28,52 +28,14 @@ void AWeaponBase::Tick(float DeltaTime)
 	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, TEXT("Hello World"));
 }
 
-int AWeaponBase::Shoot(ATarget* Target, int Multiplicator)
+int AWeaponBase::Shoot(ATarget* Target)
 {
-	return Target->Hit(Damage * Multiplicator);
+	return 0;
 }
 
 void AWeaponBase::Shoot(class AProject_B001_Grp7Character* Player)
 {
-	ATarget* target = nullptr;
-	switch (WeaponType)
-	{
-	case EnumWeaponType::AUTO:
-		if (Player->TimerShootCooldown >= ShootCoolDown) {
-			CurrentAmmo -= 1;
-			target = Raycast(Player);
-		}
-		break;
-	case EnumWeaponType::SEMIAUTO:
-		if (Player->TimerShootCooldown >= ShootCoolDown)
-		{
-			CurrentAmmo -= 1;
-			target = Raycast(Player);
-			Player->Shooting = false;
-		}
-		break;
-	case EnumWeaponType::LASER:
-		target = Raycast(Player);
-		Player->Laser->SetHiddenInGame(false);
-		if (Player->TimerShootCooldown >= ShootCoolDown)
-		{
-			CurrentAmmo -= 5;
-			Player->LaserMultiplicator += 1;
-		}
-		break;
-	}
-
-	if (Player->TimerShootCooldown >= ShootCoolDown) {
-		Player->TimerShootCooldown = 0;
-		Player->Hud->SetAmmo(CurrentAmmo, AllAmmo);
-
-		if (target) {
-			auto earningPoints = Shoot(target, Player->LaserMultiplicator);
-			Player->Points += earningPoints;
-			Player->Money += (earningPoints / 2);
-			Player->Hud->SetPointsAndMoney(Player->Points, Player->Money);
-		}
-	}
+	
 }
 
 ATarget* AWeaponBase::Raycast(AProject_B001_Grp7Character* Player)

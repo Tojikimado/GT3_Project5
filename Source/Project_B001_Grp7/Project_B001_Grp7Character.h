@@ -79,9 +79,8 @@ public:
 
 	int Money = 0;
 
-	int LaserMultiplicator = 1;
-
-	bool Shooting = false;
+	UPROPERTY(BlueprintReadWrite)
+		bool Shooting = false;
 
 	float TimerShootCooldown;
 

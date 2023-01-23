@@ -114,7 +114,6 @@ void AProject_B001_Grp7Character::StartShooting()
 void AProject_B001_Grp7Character::EndShooting()
 {
 	Shooting = false;
-	LaserMultiplicator = 1;
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -229,7 +228,6 @@ void AProject_B001_Grp7Character::SwitchWeapon(float Scroll)
 void AProject_B001_Grp7Character::SetWeapon()
 {
 	MainWeapon = MainWeaponArray[ActualWeapon];
-	LaserMultiplicator = 1;
 	Hud->SetAmmo(MainWeapon->GetDefaultObject<AWeaponBase>()->CurrentAmmo, MainWeapon->GetDefaultObject<AWeaponBase>()->AllAmmo);
 	WeaponMesh->SetStaticMesh(MainWeapon->GetDefaultObject<AWeaponBase>()->WeaponMesh);
 	WeaponMesh->SetWorldScale3D(MainWeapon->GetDefaultObject<AWeaponBase>()->OffSetScale);
@@ -240,7 +238,6 @@ void AProject_B001_Grp7Character::StartReloading()
 {
 	if(MainWeapon->GetDefaultObject<AWeaponBase>()->AmmoPerLoader == MainWeapon->GetDefaultObject<AWeaponBase>()->CurrentAmmo || MainWeapon->GetDefaultObject<AWeaponBase>()->AllAmmo == 0) return;
 
-	LaserMultiplicator = 1;
 	Reloading = true;
 }
 
