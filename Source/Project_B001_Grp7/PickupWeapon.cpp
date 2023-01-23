@@ -30,12 +30,12 @@ void APickupWeapon::BeginPlay()
 void APickupWeapon::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
+	Float(DeltaTime);
 }
 
 void APickupWeapon::OverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, TEXT("Main Weapon : "));
+
 	if (OtherActor->IsA(AProject_B001_Grp7Character::StaticClass())) {
 		if (AProject_B001_Grp7Character* Player = Cast<AProject_B001_Grp7Character>(OtherActor)) {
 			if (Player->Money >= Cost) {
@@ -48,3 +48,14 @@ void APickupWeapon::OverlapBegin(UPrimitiveComponent* OverlappedComponent, AActo
 	}
 }
 
+void APickupWeapon::Float(float DeltaTime)
+{
+	FVector NewLocation = GetActorLocation();
+	FRotator NewRotation = GetActorRotation();
+	float RunningTime = GetGameTimeSinceCreation();
+	float DeltaHeight = (FMath::Sin(RunningTime + DeltaTime) - FMath::Sin(RunningTime));
+	NewLocation.Z += DeltaHeight * floatSpeed;       //Scale our height by a factor of 20
+	float DeltaRotation = DeltaTime * rotateSpeed;    //Rotate by 20 degrees per second
+	NewRotation.Yaw += DeltaRotation;
+	SetActorLocationAndRotation(NewLocation, NewRotation);
+}
