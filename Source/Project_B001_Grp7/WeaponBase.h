@@ -68,6 +68,12 @@ public:
 	UPROPERTY(EditAnywhere)
 		FVector3d OffSetScale;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Animations)
+		UAnimMontage* Shooting;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Animations)
+		UAnimMontage* Reloading;
+
 	virtual int Shoot(ATarget* Target);
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)

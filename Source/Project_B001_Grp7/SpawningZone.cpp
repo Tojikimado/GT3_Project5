@@ -57,6 +57,7 @@ void ASpawningZone::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 
 	if (started) {
+		
 
 		timerSpawn += DeltaTime;
 

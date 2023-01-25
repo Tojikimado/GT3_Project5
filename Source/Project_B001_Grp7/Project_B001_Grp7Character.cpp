@@ -232,13 +232,14 @@ void AProject_B001_Grp7Character::SetWeapon()
 	WeaponMesh->SetStaticMesh(MainWeapon->GetDefaultObject<AWeaponBase>()->WeaponMesh);
 	WeaponMesh->SetWorldScale3D(MainWeapon->GetDefaultObject<AWeaponBase>()->OffSetScale);
 	this->GetMesh()->SetAnimInstanceClass(MainWeapon->GetDefaultObject<AWeaponBase>()->AnimationWeapon->GetAnimBlueprintGeneratedClass());
+	AnimInstance = GetMesh()->GetAnimInstance();
 }
 
 void AProject_B001_Grp7Character::StartReloading()
 {
 	if(MainWeapon->GetDefaultObject<AWeaponBase>()->AmmoPerLoader == MainWeapon->GetDefaultObject<AWeaponBase>()->CurrentAmmo || MainWeapon->GetDefaultObject<AWeaponBase>()->AllAmmo == 0) return;
 
-	Reloading = true;
+	AnimInstance->Montage_Play(MainWeapon->GetDefaultObject<AWeaponBase>()->Reloading);
 }
 
 void AProject_B001_Grp7Character::FinishReloading()

@@ -12,6 +12,8 @@ int AWeaponLaser::Shoot(ATarget* Target)
 
 void AWeaponLaser::Shoot(AProject_B001_Grp7Character* Player)
 {
+	if (Player->AnimInstance == nullptr) return;
+	Player->AnimInstance->Montage_Play(Shooting);
 	ATarget* target = nullptr;
 
 	target = Raycast(Player);

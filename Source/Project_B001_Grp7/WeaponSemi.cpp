@@ -11,6 +11,9 @@ int AWeaponSemi::Shoot(ATarget* Target)
 
 void AWeaponSemi::Shoot(AProject_B001_Grp7Character* Player)
 {
+	if (Player->AnimInstance == nullptr) return;
+	Player->AnimInstance->Montage_Play(Shooting);
+
 	ATarget* target = nullptr;
 
 	if (Player->TimerShootCooldown >= ShootCoolDown)
