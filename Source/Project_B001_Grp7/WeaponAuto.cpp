@@ -12,7 +12,8 @@ int AWeaponAuto::Shoot(ATarget* Target)
 
 void AWeaponAuto::Shoot(AProject_B001_Grp7Character* Player)
 {
-	AnimInstance->Montage_Play(Shooting);
+	if (Player->AnimInstance == nullptr) return;
+	Player->AnimInstance->Montage_Play(Shooting);
 
 	
 	ATarget* target = nullptr;

@@ -7,6 +7,7 @@
 #include "InputActionValue.h"
 #include "WeaponBase.h"
 #include "PlayerHUD.h"
+#include "Animation/AnimInstance.h"
 #include "Project_B001_Grp7Character.generated.h"
 
 
@@ -118,5 +119,7 @@ public:
 		void FinishReloading();
 
 	UCameraComponent* GetCamera();
+
+	UAnimInstance* AnimInstance;
 };
 

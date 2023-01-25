@@ -6,7 +6,6 @@
 #include "GameFramework/Actor.h"
 #include "Target.h"
 #include "Components/ArrowComponent.h"
-#include "Animation/AnimInstance.h"
 #include "WeaponBase.generated.h"
 
 UENUM(BlueprintType)
@@ -68,8 +67,6 @@ public:
 
 	UPROPERTY(EditAnywhere)
 		FVector3d OffSetScale;
-
-	UAnimInstance* AnimInstance;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Animations)
 		UAnimMontage* Shooting;
