@@ -19,6 +19,7 @@ void AWeaponSemi::Shoot(AProject_B001_Grp7Character* Player)
 	if (Player->TimerShootCooldown >= ShootCoolDown)
 	{
 		CurrentAmmo -= 1;
+		Player->GetWorld()->SpawnActor<AWeaponParticle>(WeaponParticle, Player->WeaponMesh->GetSocketLocation("BulletStart"), Player->WeaponMesh->GetSocketRotation("BulletStart"));
 		target = Raycast(Player);
 		Player->Shooting = false;
 	}

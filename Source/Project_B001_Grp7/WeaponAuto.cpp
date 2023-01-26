@@ -21,6 +21,7 @@ void AWeaponAuto::Shoot(AProject_B001_Grp7Character* Player)
 	if (Player->TimerShootCooldown >= ShootCoolDown)
 	{
 		CurrentAmmo -= 1;
+		Player->GetWorld()->SpawnActor<AWeaponParticle>(WeaponParticle, Player->WeaponMesh->GetSocketLocation("BulletStart"), FRotator(0, 0, 0));
 		target = Raycast(Player);
 	}
 

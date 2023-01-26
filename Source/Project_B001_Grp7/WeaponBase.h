@@ -6,6 +6,7 @@
 #include "GameFramework/Actor.h"
 #include "Target.h"
 #include "Components/ArrowComponent.h"
+#include "WeaponParticle.h"
 #include "WeaponBase.generated.h"
 
 UENUM(BlueprintType)
@@ -73,6 +74,9 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Animations)
 		UAnimMontage* Reloading;
+
+	UPROPERTY(EditAnywhere)
+		TSubclassOf<AWeaponParticle> WeaponParticle;
 
 	virtual int Shoot(ATarget* Target);
 
