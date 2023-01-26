@@ -5,6 +5,8 @@
 #include "DrawDebugHelpers.h"
 #include "Project_B001_Grp7Character.h"
 #include "Particles/ParticleSystemComponent.h"
+#include "Engine/DecalActor.h"
+#include "Components/DecalComponent.h"
 #include "Camera/CameraComponent.h"
 
 // Sets default values
@@ -68,6 +70,14 @@ ATarget* AWeaponBase::Raycast(AProject_B001_Grp7Character* Player)
 	bool IsHit = Player->GetWorld()->LineTraceSingleByChannel(OutHit, Start, End, ECC_Visibility, CollisionParams);
 
 	if (IsHit) {
+
+		if (WeaponType != EnumWeaponType::LASER)
+		{
+			ADecalActor* DecalActor = Player->GetWorld()->SpawnActor<ADecalActor>(OutHit.ImpactPoint, FRotator());
+			DecalActor->SetLifeSpan(2.0f);
+			DecalActor->SetDecalMaterial(BulletHoleMaterial);
+			DecalActor->GetDecal()->DecalSize = FVector(30.0f, 60.0f, 60.0f);
+		}
 
 		if (OutHit.GetActor()->IsA(ATarget::StaticClass())) {
 			return Cast<ATarget>(OutHit.GetActor());

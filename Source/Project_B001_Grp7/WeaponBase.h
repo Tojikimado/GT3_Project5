@@ -78,6 +78,9 @@ public:
 	UPROPERTY(EditAnywhere)
 		TSubclassOf<AWeaponParticle> WeaponParticle;
 
+	UPROPERTY(EditAnywhere)
+		UMaterialInterface* BulletHoleMaterial;
+
 	virtual int Shoot(ATarget* Target);
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
