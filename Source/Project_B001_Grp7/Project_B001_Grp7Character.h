@@ -121,5 +121,10 @@ public:
 	UCameraComponent* GetCamera();
 
 	UAnimInstance* AnimInstance;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Animations)
+		UAnimMontage* JumpAM;
+
+	void PlayJumpAM();
 };
 

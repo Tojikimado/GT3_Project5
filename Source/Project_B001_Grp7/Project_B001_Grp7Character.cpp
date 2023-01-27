@@ -127,6 +127,7 @@ void AProject_B001_Grp7Character::SetupPlayerInputComponent(class UInputComponen
 
 		//Jumping
 		EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Triggered, this, &ACharacter::Jump);
+		EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Triggered, this, &AProject_B001_Grp7Character::PlayJumpAM);
 		EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Completed, this, &ACharacter::StopJumping);
 
 		//Moving
@@ -266,4 +267,10 @@ void AProject_B001_Grp7Character::FinishReloading()
 UCameraComponent* AProject_B001_Grp7Character::GetCamera()
 {
 	return FollowCamera;
+}
+
+void AProject_B001_Grp7Character::PlayJumpAM()
+{
+	AnimInstance->Montage_Play(JumpAM);
+	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, TEXT("Jump"));
 }
