@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "Engine/LevelScriptActor.h"
 #include "MainMenuWidget.h"
+#include "Sound/SoundBase.h"
 #include "MainMenuHUD.generated.h"
 
 /**
@@ -20,4 +21,7 @@ public:
 protected:
 	UPROPERTY(EditAnywhere)
 		TSubclassOf<UMainMenuWidget> Hud;
+
+	UPROPERTY(EditAnywhere)
+		USoundBase* Sound;
 };
