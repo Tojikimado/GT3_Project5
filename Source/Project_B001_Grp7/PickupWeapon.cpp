@@ -1,6 +1,6 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-
+#include "Components/TextRenderComponent.h"
 #include "PickupWeapon.h"
 
 // Sets default values
@@ -17,19 +17,28 @@ APickupWeapon::APickupWeapon()
 	WeaponMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("WeaponMesh"));
 
 	WeaponMesh->AttachToComponent(CollisionBox, FAttachmentTransformRules::KeepRelativeTransform);
+
+	PointCostText = CreateDefaultSubobject<UTextRenderComponent>(TEXT("PointCostText"));
+
+	PointCostText->AttachToComponent(WeaponMesh, FAttachmentTransformRules::KeepRelativeTransform);
 }
 
 // Called when the game starts or when spawned
 void APickupWeapon::BeginPlay()
 {
 	Super::BeginPlay();
-	
+
+	FString textCost = "Money : ";
+	textCost.Append(FString::FromInt(Cost));
+
+	PointCostText->SetText(FText::FromString(textCost));
 }
 
 // Called every frame
 void APickupWeapon::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+	PointCostText->SetWorldRotation(GetWorld()->GetFirstPlayerController()->GetPawn()->GetActorRotation() + FRotator(0.0f, 180.0f, 0.0f));
 	Float(DeltaTime);
 }
 
@@ -41,6 +50,7 @@ void APickupWeapon::OverlapBegin(UPrimitiveComponent* OverlappedComponent, AActo
 			if (Player->Money >= Cost) {
 				Player->MainWeaponArray.Add(Weapon);
 				Player->Money -= Cost;
+				Player->Hud->SetPointsAndMoney(Player->Points, Player->Money);
 				K2_DestroyActor();
 			}
 		}

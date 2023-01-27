@@ -6,6 +6,7 @@
 #include "GameFramework/Actor.h"
 #include "Project_B001_Grp7Character.h"
 #include "Components/BoxComponent.h"
+#include "Components/TextRenderComponent.h"
 #include "PickupWeapon.generated.h"
 
 UCLASS()
@@ -44,6 +45,9 @@ public:
 		float floatSpeed = 20.0f;
 	UPROPERTY(EditAnywhere)
 		float rotateSpeed = 20.0f;
+
+	UPROPERTY(EditAnywhere)
+		UTextRenderComponent* PointCostText;
 
 	void Float(float DeltaTime);
 };

@@ -93,7 +93,7 @@ void AProject_B001_Grp7Character::Tick(float DeltaTime)
 	WeaponMesh->SetWorldRotation(GetMesh()->GetSocketRotation(MainWeapon->GetDefaultObject<AWeaponBase>()->SocketName));
 
 	Laser->SetHiddenInGame(true);
-	if (Shooting && MainWeapon->GetDefaultObject<AWeaponBase>()->CurrentAmmo > 0) {
+	if (Shooting && MainWeapon->GetDefaultObject<AWeaponBase>()->CurrentAmmo > 0 && !Reloading) {
 		MainWeapon->GetDefaultObject<AWeaponBase>()->Shoot(this);
 	}
 
@@ -101,13 +101,14 @@ void AProject_B001_Grp7Character::Tick(float DeltaTime)
 		StartReloading();
 	}
 
-	if (TimerShootCooldown < MainWeapon->GetDefaultObject<AWeaponBase>()->ShootCoolDown) {
+	if (TimerShootCooldown < MainWeapon->GetDefaultObject<AWeaponBase>()->ShootCoolDown && !Reloading) {
 		TimerShootCooldown += DeltaTime;
 	}
 }
 
 void AProject_B001_Grp7Character::StartShooting()
 {
+	if (Reloading) return;
 	Shooting = true;
 }
 
@@ -227,6 +228,7 @@ void AProject_B001_Grp7Character::SwitchWeapon(float Scroll)
 
 void AProject_B001_Grp7Character::SetWeapon()
 {
+	Reloading = false;
 	MainWeapon = MainWeaponArray[ActualWeapon];
 	Hud->SetAmmo(MainWeapon->GetDefaultObject<AWeaponBase>()->CurrentAmmo, MainWeapon->GetDefaultObject<AWeaponBase>()->AllAmmo);
 	WeaponMesh->SetStaticMesh(MainWeapon->GetDefaultObject<AWeaponBase>()->WeaponMesh);
@@ -237,6 +239,8 @@ void AProject_B001_Grp7Character::SetWeapon()
 
 void AProject_B001_Grp7Character::StartReloading()
 {
+	if (Reloading) return;
+	Reloading = true;
 	if(MainWeapon->GetDefaultObject<AWeaponBase>()->AmmoPerLoader == MainWeapon->GetDefaultObject<AWeaponBase>()->CurrentAmmo || MainWeapon->GetDefaultObject<AWeaponBase>()->AllAmmo == 0) return;
 
 	AnimInstance->Montage_Play(MainWeapon->GetDefaultObject<AWeaponBase>()->Reloading);
