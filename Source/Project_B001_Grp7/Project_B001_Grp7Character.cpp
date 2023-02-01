@@ -140,7 +140,7 @@ void AProject_B001_Grp7Character::SetupPlayerInputComponent(class UInputComponen
 
 		PlayerInputComponent->BindKey(EKeys::R, IE_Pressed, this, &AProject_B001_Grp7Character::StartReloading);
 
-		PlayerInputComponent->BindKey(EKeys::N, IE_Pressed, this, &AProject_B001_Grp7Character::Pause);
+		PlayerInputComponent->BindKey(EKeys::N, IE_Pressed, this, &AProject_B001_Grp7Character::Pause).bExecuteWhenPaused = true;
 
 		PlayerInputComponent->BindAxis("Wheel", this, &AProject_B001_Grp7Character::SwitchWeapon);
 
@@ -253,6 +253,7 @@ void AProject_B001_Grp7Character::Pause()
 {
 	if (isPaused) {
 		HudPause->UnPauseGame();
+		isPaused = false;
 	}
 	else {
 		APlayerController* PC = GetController<APlayerController>();
@@ -262,8 +263,8 @@ void AProject_B001_Grp7Character::Pause()
 		HudPause->init(this);
 		HudPause->AddToPlayerScreen();
 		PC->SetPause(true);
+		isPaused = true;
 	}
-	
 }
 
 void AProject_B001_Grp7Character::FinishReloading()
