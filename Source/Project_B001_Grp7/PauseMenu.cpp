@@ -16,6 +16,8 @@ void UPauseMenu::UnPauseGame()
 {
 	UGameplayStatics::GetPlayerController(GetWorld(), 0)->SetPause(false);
 	Player->HudPause->RemoveFromParent();
+	Player->isPaused = false;
+	UGameplayStatics::GetPlayerController(GetWorld(), 0)->bShowMouseCursor = false;
 }
 
 void UPauseMenu::init(AProject_B001_Grp7Character* player)

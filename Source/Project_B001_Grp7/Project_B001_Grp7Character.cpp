@@ -251,19 +251,20 @@ void AProject_B001_Grp7Character::StartReloading()
 
 void AProject_B001_Grp7Character::Pause()
 {
+	APlayerController* PC = GetController<APlayerController>();
+	check(PC);
 	if (isPaused) {
 		HudPause->UnPauseGame();
 		isPaused = false;
 	}
 	else {
-		APlayerController* PC = GetController<APlayerController>();
-		check(PC);
 		HudPause = CreateWidget<UPauseMenu>(PC, HudClassPause);
 		check(HudPause);
 		HudPause->init(this);
 		HudPause->AddToPlayerScreen();
 		PC->SetPause(true);
 		isPaused = true;
+		PC->bShowMouseCursor = true;
 	}
 }
 
