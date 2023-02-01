@@ -8,6 +8,7 @@
 #include "WeaponBase.h"
 #include "PlayerHUD.h"
 #include "Animation/AnimInstance.h"
+#include "PauseMenu.h"
 #include "Project_B001_Grp7Character.generated.h"
 
 
@@ -100,6 +101,12 @@ public:
 	UPROPERTY()
 		class UPlayerHud* Hud;
 
+	UPROPERTY(EditAnywhere)
+		TSubclassOf<class UPauseMenu> HudClassPause;
+
+	UPROPERTY()
+		class UPauseMenu* HudPause;
+
 	UPROPERTY(BlueprintReadWrite)
 		bool Reloading;
 
@@ -114,6 +121,10 @@ public:
 	void EndShooting();
 
 	void StartReloading();
+
+	void Pause();
+
+	bool isPaused = false;
 
 	UFUNCTION(BlueprintCallable)
 		void FinishReloading();

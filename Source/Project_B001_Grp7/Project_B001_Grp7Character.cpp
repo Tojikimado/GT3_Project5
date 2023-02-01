@@ -140,6 +140,8 @@ void AProject_B001_Grp7Character::SetupPlayerInputComponent(class UInputComponen
 
 		PlayerInputComponent->BindKey(EKeys::R, IE_Pressed, this, &AProject_B001_Grp7Character::StartReloading);
 
+		PlayerInputComponent->BindKey(EKeys::N, IE_Pressed, this, &AProject_B001_Grp7Character::Pause);
+
 		PlayerInputComponent->BindAxis("Wheel", this, &AProject_B001_Grp7Character::SwitchWeapon);
 
 		PlayerInputComponent->BindAction("Shoot", IE_Pressed, this, &AProject_B001_Grp7Character::StartShooting);
@@ -245,6 +247,23 @@ void AProject_B001_Grp7Character::StartReloading()
 	if(MainWeapon->GetDefaultObject<AWeaponBase>()->AmmoPerLoader == MainWeapon->GetDefaultObject<AWeaponBase>()->CurrentAmmo || MainWeapon->GetDefaultObject<AWeaponBase>()->AllAmmo == 0) return;
 
 	AnimInstance->Montage_Play(MainWeapon->GetDefaultObject<AWeaponBase>()->Reloading);
+}
+
+void AProject_B001_Grp7Character::Pause()
+{
+	if (isPaused) {
+		HudPause->UnPauseGame();
+	}
+	else {
+		APlayerController* PC = GetController<APlayerController>();
+		check(PC);
+		HudPause = CreateWidget<UPauseMenu>(PC, HudClassPause);
+		check(HudPause);
+		HudPause->init(this);
+		HudPause->AddToPlayerScreen();
+		PC->SetPause(true);
+	}
+	
 }
 
 void AProject_B001_Grp7Character::FinishReloading()
