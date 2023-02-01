@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
+#include "Components/TextBlock.h"
 #include "PlayerHud.generated.h"
 
 /**
@@ -14,12 +15,6 @@ class PROJECT_B001_GRP7_API UPlayerHud : public UUserWidget
 {
 	GENERATED_BODY()
 	
-public:
-
-	void SetAmmo(int CurrentAmmo, int AllAmmo);
-
-	void SetPointsAndMoney(int Points, int Money);
-
 	UPROPERTY(EditAnywhere, meta = (BindWidget))
 		class UTextBlock* PointsText;
 
@@ -31,4 +26,10 @@ public:
 
 	UPROPERTY(EditAnywhere, meta = (BindWidget))
 		class UTextBlock* AllAmmoText;
+
+public:
+
+	void SetAmmo(int CurrentAmmo, int AllAmmo);
+
+	void SetPointsAndMoney(int Points, int Money);
 };

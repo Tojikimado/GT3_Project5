@@ -22,10 +22,6 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-public:	
-	// Called every frame
-	virtual void Tick(float DeltaTime) override;
-
 	UPROPERTY(EditAnywhere)
 		UStaticMeshComponent* WeaponMesh;
 
@@ -34,9 +30,6 @@ public:
 
 	UPROPERTY(EditAnywhere)
 		TSubclassOf<AWeaponBase> Weapon;
-
-	UPROPERTY(EditAnywhere)
-		int Cost;
 
 	UFUNCTION()
 		void OverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
@@ -50,4 +43,11 @@ public:
 		UTextRenderComponent* PointCostText;
 
 	void Float(float DeltaTime);
+
+public:	
+	// Called every frame
+	virtual void Tick(float DeltaTime) override;
+
+	UPROPERTY(EditAnywhere)
+		int Cost;
 };

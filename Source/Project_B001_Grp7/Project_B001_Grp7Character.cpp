@@ -9,9 +9,6 @@
 #include "GameFramework/SpringArmComponent.h"
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
-#include "DrawDebugHelpers.h"
-#include "Particles/ParticleSystemComponent.h"
-#include "Target.h"
 
 //////////////////////////////////////////////////////////////////////////
 // AProject_B001_Grp7Character

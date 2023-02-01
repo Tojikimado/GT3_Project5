@@ -9,6 +9,9 @@
 #include "PlayerHUD.h"
 #include "Animation/AnimInstance.h"
 #include "PauseMenu.h"
+#include "DrawDebugHelpers.h"
+#include "Particles/ParticleSystemComponent.h"
+#include "Target.h"
 #include "Project_B001_Grp7Character.generated.h"
 
 
@@ -67,7 +70,27 @@ protected:
 	// To add mapping context
 	virtual void BeginPlay() override;
 
+	int ActualWeapon = 0;
 
+	UPROPERTY(EditAnywhere)
+		TSubclassOf<AWeaponBase> MainWeapon;
+
+	UPROPERTY(BlueprintReadWrite)
+		bool Reloading;
+
+	// Called every frame
+	virtual void Tick(float DeltaTime) override;
+
+	void StartShooting();
+
+	void EndShooting();
+
+	void StartReloading();
+
+	void Pause();
+
+	UFUNCTION(BlueprintCallable)
+		void FinishReloading();
 
 public:
 	/** Returns CameraBoom subobject **/
@@ -75,25 +98,21 @@ public:
 	/** Returns FollowCamera subobject **/
 	FORCEINLINE class UCameraComponent* GetFollowCamera() const { return FollowCamera; }
 
-	int ActualWeapon = 0;
+	bool isPaused = false;
 
 	int Points = 0;
 
 	int Money = 0;
 
-	UPROPERTY(BlueprintReadWrite)
-		bool Shooting = false;
-
 	float TimerShootCooldown;
-
-	UStaticMeshComponent* WeaponMesh;
-
-	UPROPERTY(EditAnywhere)
-		TSubclassOf<AWeaponBase> MainWeapon;
 
 	UPROPERTY(EditAnywhere)
 		TArray<TSubclassOf<AWeaponBase>> MainWeaponArray;
 
+	UPROPERTY(BlueprintReadWrite)
+		bool Shooting = false;
+
+	UStaticMeshComponent* WeaponMesh;
 
 	UPROPERTY(EditAnywhere)
 		TSubclassOf<class UPlayerHud> HudClass;
@@ -107,29 +126,8 @@ public:
 	UPROPERTY()
 		class UPauseMenu* HudPause;
 
-	UPROPERTY(BlueprintReadWrite)
-		bool Reloading;
-
 	UPROPERTY(EditAnywhere)
 		UParticleSystemComponent* Laser;
-
-	// Called every frame
-	virtual void Tick(float DeltaTime) override;
-
-	void StartShooting();
-
-	void EndShooting();
-
-	void StartReloading();
-
-	void Pause();
-
-	bool isPaused = false;
-
-	UFUNCTION(BlueprintCallable)
-		void FinishReloading();
-
-	UCameraComponent* GetCamera();
 
 	UAnimInstance* AnimInstance;
 
@@ -137,5 +135,7 @@ public:
 		UAnimMontage* JumpAM;
 
 	void PlayJumpAM();
+
+	UCameraComponent* GetCamera();
 };
 

@@ -1,9 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-#include "Components/Button.h"
-#include "Kismet/GameplayStatics.h"
-#include "Project_B001_Grp7Character.h"
 #include "PauseMenu.h"
+#include "Project_B001_Grp7Character.h"
 
 void UPauseMenu::NativeConstruct()
 {

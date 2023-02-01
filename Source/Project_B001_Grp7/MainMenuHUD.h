@@ -6,6 +6,7 @@
 #include "Engine/LevelScriptActor.h"
 #include "MainMenuWidget.h"
 #include "Sound/SoundBase.h"
+#include "Kismet/GameplayStatics.h"
 #include "MainMenuHUD.generated.h"
 
 /**

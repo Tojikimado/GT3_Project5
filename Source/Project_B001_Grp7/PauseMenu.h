@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
 #include "Components/Button.h"
+#include "Kismet/GameplayStatics.h"
 #include "PauseMenu.generated.h"
 
 /**
@@ -19,8 +20,6 @@ class PROJECT_B001_GRP7_API UPauseMenu : public UUserWidget
 
 	UPROPERTY(EditAnywhere, meta = (BindWidget))
 		class UButton* ResumeButton;
-
-
 
 	class AProject_B001_Grp7Character* Player;
 
