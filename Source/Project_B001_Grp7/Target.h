@@ -27,7 +27,6 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
@@ -42,5 +41,6 @@ public:
 	float timer;
 	float points;
 
+public:
 	int Hit(int Damage);
 };

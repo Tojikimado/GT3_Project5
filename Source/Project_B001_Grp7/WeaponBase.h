@@ -29,10 +29,10 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
+public:
 	UPROPERTY(EditAnywhere)
 		UStaticMesh* WeaponMesh;
 
@@ -81,10 +81,10 @@ public:
 	UPROPERTY(EditAnywhere)
 		UMaterialInterface* BulletHoleMaterial;
 
-	virtual int Shoot(ATarget* Target);
-
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		EnumWeaponType WeaponType;
+
+	virtual int Shoot(ATarget* Target);
 
 	virtual void Shoot(class AProject_B001_Grp7Character* Player);
 

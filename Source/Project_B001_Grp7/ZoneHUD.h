@@ -13,13 +13,7 @@ UCLASS()
 class PROJECT_B001_GRP7_API UZoneHUD : public UUserWidget
 {
 	GENERATED_BODY()
-
-public:
-
-	void Init();
-
-	void SetTimer(float TimeRemainings, float TimeMax);
-
+		
 	UPROPERTY(EditAnywhere, meta = (BindWidget))
 		class UTextBlock* TimerText;
 
@@ -31,4 +25,12 @@ public:
 
 	UPROPERTY()
 		UMaterialInstanceDynamic* TimerMID;
+
+public:
+
+	void Init();
+
+	void SetTimer(float TimeRemainings, float TimeMax);
+
+
 };

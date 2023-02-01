@@ -20,8 +20,6 @@ protected:
 	virtual void BeginPlay() override;
 	int Timer = 0;
 
-public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
-
 };
