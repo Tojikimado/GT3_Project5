@@ -3,8 +3,8 @@
 
 #include "CharacterAnimInstance.h"
 
-CharacterAnimInstance::CharacterAnimInstance()
+UCharacterAnimInstance::UCharacterAnimInstance()
 {
-	Speed = 0.0;
+	
 }
 

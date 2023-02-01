@@ -10,14 +10,10 @@
  * 
  */
 UCLASS(transient, Blueprintable, hideCategories=AnimInstance, BlueprintType)
-class CharacterAnimInstance: public UAnimInstance
+class UCharacterAnimInstance: public UAnimInstance
 {
 	GENERATED_BODY()
 public:
-	CharacterAnimInstance();
+	UCharacterAnimInstance();
 	
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Generic")
-		float Speed;
-
-	virtual void NativeUpdateAnimation(float DeltaSeconds) override;
 };
