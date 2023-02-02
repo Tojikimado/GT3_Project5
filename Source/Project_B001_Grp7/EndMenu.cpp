@@ -21,4 +21,5 @@ void UEndMenu::SetScore(int Score)
 void UEndMenu::PlayLevel()
 {
 	UGameplayStatics::OpenLevel(GetWorld(), "L_MainMenu");
+	UGameplayStatics::GetPlayerController(GetWorld(), 0)->bShowMouseCursor = true;
 }

@@ -7,4 +7,5 @@ void AMainMenuHUD::BeginPlay() {
 	CreateWidget<UMainMenuWidget>(GetWorld(), Hud)->AddToViewport();
 
 	UGameplayStatics::PlaySound2D(GetWorld(), Sound, 1, 1, 1);
+	UGameplayStatics::GetPlayerController(GetWorld(), 0)->bShowMouseCursor = true;
 }

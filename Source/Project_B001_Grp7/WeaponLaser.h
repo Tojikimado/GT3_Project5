@@ -22,6 +22,8 @@ public :
 
 	virtual void Shoot(class AProject_B001_Grp7Character* Player) override;
 
+	virutal void EndShooting() override;
+
 	UPROPERTY(EditAnywhere)
 		UParticleSystem* Laser;
 };
