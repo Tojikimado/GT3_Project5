@@ -20,6 +20,8 @@ AWeaponBase::AWeaponBase()
 void AWeaponBase::BeginPlay()
 {
 	Super::BeginPlay();
+	AllAmmo = AmmoPerLoader * MaxLoader;
+	CurrentAmmo = AmmoPerLoader;
 }
 
 // Called every frame
