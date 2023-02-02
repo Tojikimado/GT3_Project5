@@ -12,6 +12,7 @@
 #include "DrawDebugHelpers.h"
 #include "Particles/ParticleSystemComponent.h"
 #include "Target.h"
+#include "EndMenu.h"
 #include "Project_B001_Grp7Character.generated.h"
 
 
@@ -78,6 +79,9 @@ protected:
 	UPROPERTY(BlueprintReadWrite)
 		bool Reloading;
 
+	UPROPERTY(EditAnywhere)
+		class TSubclassOf<class UEndMenu> HudEnd;
+
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
@@ -126,7 +130,7 @@ public:
 		TSubclassOf<class UPauseMenu> HudClassPause;
 
 	UPROPERTY()
-		class UPauseMenu* HudPause;
+		class UPauseMenu* HudPause;	
 
 	UPROPERTY(EditAnywhere)
 		UParticleSystemComponent* Laser;

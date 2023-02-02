@@ -78,6 +78,7 @@ void ASpawningZone::Tick(float DeltaTime)
 		if (timerTimer <= 0.0f) {
 			started = false;
 			Hud->RemoveFromParent();
+			K2_DestroyActor();
 		}
 
 	}

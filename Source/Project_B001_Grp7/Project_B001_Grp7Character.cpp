@@ -99,7 +99,10 @@ void AProject_B001_Grp7Character::Tick(float DeltaTime)
 	if (Shooting && MainWeapon->GetDefaultObject<AWeaponBase>()->CurrentAmmo > 0 && !Reloading) {
 		MainWeapon->GetDefaultObject<AWeaponBase>()->Shoot(this);
 		if (!CheckAmmo()) {
-			UGameplayStatics::OpenLevel(GetWorld(), "L_End");
+			UEndMenu* ui = CreateWidget<UEndMenu>(GetWorld(), HudEnd);
+			ui->SetScore(Points);
+			ui->AddToViewport();
+			UGameplayStatics::GetPlayerController(GetWorld(), 0)->bShowMouseCursor = true;
 		}
 	}
 
@@ -304,12 +307,12 @@ void AProject_B001_Grp7Character::PlayJumpAM()
 
 bool AProject_B001_Grp7Character::CheckAmmo()
 {
-	bool ammo = true;
+	bool ammo = false;
 
 	for (TSubclassOf<AWeaponBase> weapon : MainWeaponArray)
 	{
-		if (weapon->GetDefaultObject<AWeaponBase>()->CurrentAmmo == 0 && weapon->GetDefaultObject<AWeaponBase>()->AllAmmo == 0) {
-			ammo = false;
+		if (!weapon->GetDefaultObject<AWeaponBase>()->CurrentAmmo == 0 || !weapon->GetDefaultObject<AWeaponBase>()->AllAmmo == 0) {
+			ammo = true;
 		}
 	}
 

@@ -9,7 +9,8 @@ void AEndLevel::BeginPlay() {
 
 	UEndMenu* hud = CreateWidget<UEndMenu>(GetWorld(), Hud);
 	if (auto player = Cast<AProject_B001_Grp7Character>(GetWorld()->GetFirstPlayerController()->GetPawn())) {
-		hud->SetScore(player->Points);
+		hud->SetScore(50);
+		// player->Points
 		hud->AddToViewport();
 	}
 }
