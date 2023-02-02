@@ -115,11 +115,13 @@ void AProject_B001_Grp7Character::Tick(float DeltaTime)
 void AProject_B001_Grp7Character::StartShooting()
 {
 	if (Reloading) return;
+	MainWeapon->GetDefaultObject<AWeaponBase>()->StartShooting(this);
 	Shooting = true;
 }
 
 void AProject_B001_Grp7Character::EndShooting()
 {
+	MainWeapon->GetDefaultObject<AWeaponBase>()->EndShooting();
 	Shooting = false;
 }
 
@@ -249,9 +251,9 @@ void AProject_B001_Grp7Character::SetWeapon()
 void AProject_B001_Grp7Character::StartReloading()
 {
 	if (Reloading) return;
+	if (MainWeapon->GetDefaultObject<AWeaponBase>()->AmmoPerLoader == MainWeapon->GetDefaultObject<AWeaponBase>()->CurrentAmmo || MainWeapon->GetDefaultObject<AWeaponBase>()->AllAmmo == 0) return;
 	Reloading = true;
-	if(MainWeapon->GetDefaultObject<AWeaponBase>()->AmmoPerLoader == MainWeapon->GetDefaultObject<AWeaponBase>()->CurrentAmmo || MainWeapon->GetDefaultObject<AWeaponBase>()->AllAmmo == 0) return;
-
+	MainWeapon->GetDefaultObject<AWeaponBase>()->EndShooting();
 	AnimInstance->Montage_Play(MainWeapon->GetDefaultObject<AWeaponBase>()->Reloading);
 }
 
@@ -287,7 +289,7 @@ void AProject_B001_Grp7Character::FinishReloading()
 
 	Hud->SetAmmo(MainWeapon->GetDefaultObject<AWeaponBase>()->CurrentAmmo, MainWeapon->GetDefaultObject<AWeaponBase>()->AllAmmo);
 
-	
+	MainWeapon->GetDefaultObject<AWeaponBase>()->StartShooting(this);
 	Reloading = false;;
 }
 

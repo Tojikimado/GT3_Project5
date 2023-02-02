@@ -93,5 +93,7 @@ public:
 
 	ATarget* Raycast(class AProject_B001_Grp7Character* Player);
 
-	void EndShooting();
+	virtual void StartShooting(AProject_B001_Grp7Character* Player);
+
+	virtual void EndShooting();
 };

@@ -8,4 +8,5 @@ void AMainMenuHUD::BeginPlay() {
 
 	UGameplayStatics::PlaySound2D(GetWorld(), Sound, 1, 1, 1);
 	UGameplayStatics::GetPlayerController(GetWorld(), 0)->bShowMouseCursor = true;
+	UGameplayStatics::GetPlayerController(GetWorld(), 0)->SetPause(true);
 }

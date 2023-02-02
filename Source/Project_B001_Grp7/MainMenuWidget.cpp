@@ -16,6 +16,7 @@ void UMainMenuWidget::NativeConstruct()
 void UMainMenuWidget::PlayLevel()
 {
 	UGameplayStatics::OpenLevel(GetWorld(), LevelName);
+	UGameplayStatics::GetPlayerController(GetWorld(), 0)->SetPause(false);
 }
 
 void UMainMenuWidget::QuitLevel()

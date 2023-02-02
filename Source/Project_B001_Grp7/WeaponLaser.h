@@ -22,7 +22,11 @@ public :
 
 	virtual void Shoot(class AProject_B001_Grp7Character* Player) override;
 
-	virutal void EndShooting() override;
+	virtual void StartShooting(AProject_B001_Grp7Character* Player) override;
+
+	virtual void EndShooting() override;
+
+	UAudioComponent* audio;
 
 	UPROPERTY(EditAnywhere)
 		UParticleSystem* Laser;

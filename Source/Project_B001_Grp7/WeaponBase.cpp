@@ -88,7 +88,12 @@ ATarget* AWeaponBase::Raycast(AProject_B001_Grp7Character* Player)
 	return nullptr;
 }
 
-void EndShooting() 
+void AWeaponBase::StartShooting(AProject_B001_Grp7Character* Player)
+{
+
+}
+
+void AWeaponBase::EndShooting()
 {
 
 }

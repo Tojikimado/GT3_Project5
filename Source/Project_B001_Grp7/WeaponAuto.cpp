@@ -14,7 +14,7 @@ void AWeaponAuto::Shoot(AProject_B001_Grp7Character* Player)
 {
 	if (Player->AnimInstance == nullptr) return;
 	Player->AnimInstance->Montage_Play(Shooting);
-	UGameplayStatics::PlaySound2D(Player->GetWorld(), Sound, 1, 1, 1);
+	UGameplayStatics::PlaySound2D(Player->GetWorld(), Sound, 100, 1, 1);
 	
 	ATarget* target = nullptr;
 
