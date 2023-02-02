@@ -87,6 +87,8 @@ protected:
 
 	void StartReloading();
 
+	bool CheckAmmo();
+
 	void Pause();
 
 	UFUNCTION(BlueprintCallable)

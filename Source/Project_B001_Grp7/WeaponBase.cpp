@@ -7,6 +7,7 @@
 #include "Particles/ParticleSystemComponent.h"
 #include "Engine/DecalActor.h"
 #include "Components/DecalComponent.h"
+#include "Kismet/GameplayStatics.h"
 #include "Camera/CameraComponent.h"
 
 // Sets default values
@@ -20,8 +21,6 @@ AWeaponBase::AWeaponBase()
 void AWeaponBase::BeginPlay()
 {
 	Super::BeginPlay();
-	AllAmmo = AmmoPerLoader * MaxLoader;
-	CurrentAmmo = AmmoPerLoader;
 }
 
 // Called every frame

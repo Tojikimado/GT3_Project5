@@ -32,8 +32,15 @@ void AWeaponAuto::Shoot(AProject_B001_Grp7Character* Player)
 		if (target) {
 			auto earningPoints = Shoot(target);
 			Player->Points += earningPoints;
+
 			Player->Money += (earningPoints / 2);
 			Player->Hud->SetPointsAndMoney(Player->Points, Player->Money);
+
+			UMyGameInstance* GI = Cast<UMyGameInstance>(UGameplayStatics::GetGameInstance(GetWorld()));
+			if (GI)
+			{
+				GI->Score = Player->Points;
+			}
 		}
 	}
 }

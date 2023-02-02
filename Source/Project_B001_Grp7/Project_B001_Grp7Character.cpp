@@ -80,6 +80,12 @@ void AProject_B001_Grp7Character::BeginPlay()
 		Hud->AddToPlayerScreen();
 	}
 
+	for (TSubclassOf<AWeaponBase> weapon : MainWeaponArray)
+	{
+		weapon->GetDefaultObject<AWeaponBase>()->AllAmmo = weapon->GetDefaultObject<AWeaponBase>()->AmmoPerLoader * weapon->GetDefaultObject<AWeaponBase>()->MaxLoader;
+		weapon->GetDefaultObject<AWeaponBase>()->CurrentAmmo = weapon->GetDefaultObject<AWeaponBase>()->AmmoPerLoader;
+	}
+
 	SetWeapon();
 }
 
@@ -92,6 +98,9 @@ void AProject_B001_Grp7Character::Tick(float DeltaTime)
 	Laser->SetHiddenInGame(true);
 	if (Shooting && MainWeapon->GetDefaultObject<AWeaponBase>()->CurrentAmmo > 0 && !Reloading) {
 		MainWeapon->GetDefaultObject<AWeaponBase>()->Shoot(this);
+		if (!CheckAmmo()) {
+			UGameplayStatics::OpenLevel(GetWorld(), "L_End");
+		}
 	}
 
 	if (Shooting && MainWeapon->GetDefaultObject<AWeaponBase>()->CurrentAmmo <= 0) {
@@ -291,4 +300,18 @@ void AProject_B001_Grp7Character::PlayJumpAM()
 {
 	AnimInstance->Montage_Play(JumpAM);
 	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, TEXT("Jump"));
+}
+
+bool AProject_B001_Grp7Character::CheckAmmo()
+{
+	bool ammo = true;
+
+	for (TSubclassOf<AWeaponBase> weapon : MainWeaponArray)
+	{
+		if (weapon->GetDefaultObject<AWeaponBase>()->CurrentAmmo == 0 && weapon->GetDefaultObject<AWeaponBase>()->AllAmmo == 0) {
+			ammo = false;
+		}
+	}
+
+	return ammo;
 }

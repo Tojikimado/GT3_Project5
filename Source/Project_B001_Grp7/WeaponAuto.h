@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "WeaponBase.h"
+#include "MyGameInstance.h"
 #include "WeaponAuto.generated.h"
 
 /**
