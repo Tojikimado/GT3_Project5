@@ -84,6 +84,9 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		EnumWeaponType WeaponType;
 
+	UPROPERTY(EditAnywhere)
+		USoundBase* Sound;
+
 	virtual int Shoot(ATarget* Target);
 
 	virtual void Shoot(class AProject_B001_Grp7Character* Player);
