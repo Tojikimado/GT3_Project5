@@ -36,6 +36,8 @@ void ASpawningZone::OverlapBegin(UPrimitiveComponent* OverlappedComponent, AActo
 		timerTimer = Timer;
 
 		if (Cast<AProject_B001_Grp7Character>(OtherActor)->IsLocallyControlled() && HudClass) {
+			player = Cast<AProject_B001_Grp7Character>(OtherActor);
+			player->InZone = true;
 			APlayerController* PC = Cast<AProject_B001_Grp7Character>(OtherActor)->GetController<APlayerController>();
 			check(PC);
 			Hud = CreateWidget<UZoneHUD>(PC, HudClass);
@@ -77,7 +79,11 @@ void ASpawningZone::Tick(float DeltaTime)
 
 		if (timerTimer <= 0.0f) {
 			started = false;
+			player->InZone = false;
 			Hud->RemoveFromParent();
+			if (player->Points < Goal) {
+				player->Defeat();
+			}
 			K2_DestroyActor();
 		}
 

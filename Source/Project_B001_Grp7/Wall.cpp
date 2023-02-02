@@ -50,7 +50,7 @@ void AWall::OverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* Other
 	if (OtherActor->IsA(AProject_B001_Grp7Character::StaticClass())) {
 
 		if (AProject_B001_Grp7Character* Player = Cast<AProject_B001_Grp7Character>(OtherActor)) {
-			if (Player->Points >= Cost) {
+			if (Player->Points >= Cost && !Player->InZone) {
 				K2_DestroyActor();
 			}
 		}

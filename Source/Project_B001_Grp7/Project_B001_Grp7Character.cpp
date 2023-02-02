@@ -99,10 +99,7 @@ void AProject_B001_Grp7Character::Tick(float DeltaTime)
 	if (Shooting && MainWeapon->GetDefaultObject<AWeaponBase>()->CurrentAmmo > 0 && !Reloading) {
 		MainWeapon->GetDefaultObject<AWeaponBase>()->Shoot(this);
 		if (!CheckAmmo()) {
-			UEndMenu* ui = CreateWidget<UEndMenu>(GetWorld(), HudEnd);
-			ui->SetScore(Points);
-			ui->AddToViewport();
-			UGameplayStatics::GetPlayerController(GetWorld(), 0)->bShowMouseCursor = true;
+			Defeat();
 		}
 	}
 
@@ -297,6 +294,14 @@ void AProject_B001_Grp7Character::FinishReloading()
 UCameraComponent* AProject_B001_Grp7Character::GetCamera()
 {
 	return FollowCamera;
+}
+
+void AProject_B001_Grp7Character::Defeat()
+{
+	UEndMenu* ui = CreateWidget<UEndMenu>(GetWorld(), HudEnd);
+	ui->SetScore(Points);
+	ui->AddToViewport();
+	UGameplayStatics::GetPlayerController(GetWorld(), 0)->bShowMouseCursor = true;
 }
 
 void AProject_B001_Grp7Character::PlayJumpAM()

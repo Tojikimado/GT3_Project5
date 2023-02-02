@@ -110,6 +110,8 @@ public:
 
 	int Money = 0;
 
+	bool InZone = false;
+
 	float TimerShootCooldown;
 
 	UPROPERTY(EditAnywhere)
@@ -143,5 +145,7 @@ public:
 	void PlayJumpAM();
 
 	UCameraComponent* GetCamera();
+
+	void Defeat();
 };
 
